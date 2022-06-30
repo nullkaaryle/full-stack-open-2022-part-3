@@ -15,7 +15,7 @@ let persons = [
     {
         "id": 3,
         "name": "Anna",
-        "number": "05012324"        
+        "number": "05012324"
     },
     {
         "id": 4,
@@ -24,12 +24,23 @@ let persons = [
     }
 ]
 
+const numberOfPersons = persons.length
+const timeNow = Date()
+
+const infotext =`<p>Phonebook has info for ${numberOfPersons} people</p> <p>${timeNow}</p>`
+    
+
+
 app.get('/', (req, res) => {
     res.send('<h1>Hello Phonebook!</h1>')
 })
 
 app.get('/api/persons', (req, res) => {
     res.json(persons)
+})
+
+app.get('/info', (req, res) => {
+    res.send(infotext)
 })
 
 const PORT = 3001
