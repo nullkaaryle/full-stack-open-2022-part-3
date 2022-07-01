@@ -1,26 +1,28 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
     {
-        "id": 1,
         "name": "Ville",
-        "number": "05012345"
+        "number": "05012345",
+        "id": 1,
     },
     {
-        "id": 2,
         "name": "Kalle",
-        "number": "04034557"
+        "number": "04034557",
+        "id": 2
     },
     {
-        "id": 3,
         "name": "Anna",
-        "number": "05012324"
+        "number": "05012324",
+        "id": 3
     },
     {
-        "id": 4,
         "name": "Hanna",
-        "number": "04535123"
+        "number": "04535123",
+        "id": 4
     }
 ]
 
@@ -65,6 +67,13 @@ app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     persons = persons.filter(note => note.id !== id)
     response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+    const person = request.body
+    person.id = Math.floor(Math.random() * 1000)
+    persons = persons.concat(person)
+    response.json(person)
 })
 
 const PORT = 3001
