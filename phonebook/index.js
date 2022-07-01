@@ -69,10 +69,38 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
+const generateId = Math.floor(Math.random() * 1000)
+
+
 app.post('/api/persons', (request, response) => {
-    const person = request.body
-    person.id = Math.floor(Math.random() * 1000)
+    const body = request.body
+
+    if (!body.name) {
+        return response.status(400).json({
+            error: 'name is missing'
+        })
+    }
+
+    if (!body.number) {
+        return response.status(400).json({
+            error: 'number is missing'
+        })
+    }
+
+    if (persons.find(person => person.name === body.name)) {
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId,
+    }
+
     persons = persons.concat(person)
+
     response.json(person)
 })
 
