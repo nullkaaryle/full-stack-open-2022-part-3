@@ -6,8 +6,6 @@ const cors = require('cors')
 const app = express()
 const Person = require('./models/person')
 
-
-
 app.use(express.json())
 app.use(cors())
 app.use(express.static('build'))
@@ -46,17 +44,7 @@ let persons = [
 
 const numberOfPersons = persons.length
 const timeNow = Date()
-
 const infotext = `<p>Phonebook has info for ${numberOfPersons} people</p> <p>${timeNow}</p>`
-
-const persontext = (person) => {
-    return (`
-        <h3>Contact from the phonebook</h3>
-        <p><b>Contact name:</b> ${person.name}</p> 
-        <p><b>Contact phonenumber:</b> ${person.number}</p>
-        <p><b>Phonebook id:</b> ${person.id}</p>
-        `)
-}
 
 app.get('/', (request, response) => {
     response.send('<h1>Hello Phonebook!</h1>')
@@ -66,22 +54,20 @@ app.get('/info', (request, response) => {
     response.send(infotext)
 })
 
+
 app.get('/api/persons', (request, response) => {
     Person.find({}).then(persons => {
         response.json(persons)
     })
 })
 
-app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
 
-    if (person) {
-        response.send(persontext(person))
-    } else {
-        response.status(404).end()
-    }
+app.get('/api/persons/:id', (request, response) => {
+    Person.findById(request.params.id).then(person => {
+        response.json(person)
+    })
 })
+
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
@@ -89,10 +75,9 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-const generateId = Math.floor(Math.random() * 1000)
-
 
 app.post('/api/persons', (request, response) => {
+
     const body = request.body
 
     if (!body.name) {
@@ -107,21 +92,14 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    if (persons.find(person => person.name === body.name)) {
-        return response.status(400).json({
-            error: 'name must be unique'
-        })
-    }
-
-    const person = {
+    const person = new Person({
         name: body.name,
-        number: body.number,
-        id: generateId,
-    }
+        number: body.number
+    })
 
-    persons = persons.concat(person)
-
-    response.json(person)
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
 
