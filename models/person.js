@@ -12,6 +12,9 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message)
     })
 
+function numberValidator(val) {
+    return (/(0([1-9]{1,2})-([0-9]{7}))|(0([0-9]{2})-([0-9]{8}))/).test(val)
+}
 
 const personSchema = new mongoose.Schema({
     name: {
@@ -20,8 +23,12 @@ const personSchema = new mongoose.Schema({
         maxlength: 15,
         required: true
     },
-    number: { 
-        type: String
+    number: {
+        type: String,
+        minlength: 8,
+        maxlength: 12,
+        required: true,
+        validate: numberValidator
     }
 })
 
