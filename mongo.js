@@ -11,7 +11,7 @@ const contactNumber = process.argv[4]
 
 
 const url =
-  `mongodb url here`
+  'mongodb url here'
 
 mongoose.connect(url)
 
