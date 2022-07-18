@@ -1,3 +1,7 @@
+// this file is not part of the app anymore
+// it was created for mongodb and mongoose testing
+// mostly via command line
+
 const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
